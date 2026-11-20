@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "apps": [
+    {
+      "package": "com.sribees.hub",
+      "kind": "apk",
+      "audience": "public",
+      "name": {"en": "SriBees Hub", "si": "SriBees Hub", "ta": "SriBees Hub"},
+      "description": {
+        "en": "A new version of SriBees Hub is ready.",
+        "si": "SriBees Hub එකේ අලුත් version එකක් ලෑස්තියි.",
+        "ta": "SriBees Hub இன் புதிய பதிப்பு தயார்."
+      },
+      "version_code": 2,
+      "version_name": "0.1.1",
+      "apk_url": "https://hub.sribees.com/apk/sribees-hub-2.apk",
+      "sha256": "1e50933e387dec7d6810a5388d1339b4cff0f81a2e83aad3a8c3ad6ba24bc6f0",
+      "cert_sha256": ["45d3bbbbf5e1662db78afcc25d83d5f5bf108b8470eb6c858c8f8066a62f9cb8"]
+    },
+    {
+      "package": "com.sribeesonline.sribees_mobile",
+      "kind": "store_link",
+      "audience": "public",
+      "name": {"en": "SriBees Online", "si": "SriBees Online", "ta": "SriBees Online"},
+      "description": {
+        "en": "Shop groceries and get them delivered.",
+        "si": "බඩු ඇණවුම් කරලා ගෙදරටම ගෙන්වා ගන්න.",
+        "ta": "மளிகைப் பொருட்களை வாங்கி வீட்டுக்கே பெறுங்கள்."
+      },
+      "play_url": "https://play.google.com/store/apps/details?id=com.sribeesonline.sribees_mobile"
+    },
+    {
+      "package": "com.sribeesonline.sribees_new_orders",
+      "kind": "apk",
+      "audience": "staff",
+      "name": {"en": "SriBees New Orders", "si": "SriBees New Orders", "ta": "SriBees New Orders"},
+      "description": {
+        "en": "New order alerts and order handling for branch staff.",
+        "si": "Branch staff ලාට අලුත් order alert සහ order වැඩ.",
+        "ta": "கிளை ஊழியர்களுக்கான புதிய ஆர்டர் அறிவிப்புகள்."
+      },
+      "version_code": 8,
+      "version_name": "0.7.0",
+      "apk_url": "https://hub.sribees.com/apk/sribees-new-orders-8.apk",
+      "sha256": "c43f3c77c616fc91cf363e6018c3bba8ade14dabf07f84bee6051ea0f22e7701",
+      "cert_sha256": ["d10271a6d1f4a8d77cc9d064086344fdbced9f3dfa923cfb41a797dc8dcfde15"]
+    }
+  ]
+}

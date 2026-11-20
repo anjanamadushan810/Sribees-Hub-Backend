@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="si">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SriBees Hub</title>
+<meta name="description" content="SriBees Hub - every SriBees app in one place.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --pink:#D81B60; --ink:#17233B; --surface:#F6F7FB; --border:#E5E7EB; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--surface); color:var(--ink);
+         font-family: Inter, "Noto Sans Sinhala", "Noto Sans Tamil", system-ui, sans-serif; line-height:1.6; }
+  main { max-width:560px; margin:0 auto; padding:40px 16px 56px; }
+  .logo { width:72px; height:72px; border-radius:20px; background:var(--pink); display:grid; place-items:center;
+          color:#fff; font-size:36px; font-weight:700; }
+  h1 { font-size:30px; margin:16px 0 4px; }
+  p.lead { margin:0 0 24px; color:#3b4660; }
+  .btn { display:block; text-align:center; background:var(--pink); color:#fff; text-decoration:none;
+         font-weight:600; padding:16px; border-radius:12px; font-size:17px; }
+  .card { background:#fff; border:1px solid var(--border); border-radius:16px; padding:20px; margin-top:20px; }
+  ol { padding-left:20px; margin:8px 0 0; }
+  li { margin:6px 0; }
+  .muted { color:#5b6478; font-size:14px; }
+  .langs { display:flex; gap:8px; margin-bottom:20px; }
+  .langs button { border:1px solid var(--border); background:#fff; border-radius:999px; padding:6px 14px;
+                  font:inherit; font-size:14px; cursor:pointer; color:var(--ink); }
+  .langs button[aria-pressed="true"] { border-color:var(--pink); color:var(--pink); }
+  [data-l] { display:none; } [data-l].on { display:block; }
+</style>
+</head>
+<body>
+<main>
+  <div class="langs" role="group" aria-label="Language">
+    <button data-set="si" aria-pressed="true">සිංහල</button>
+    <button data-set="ta" aria-pressed="false">தமிழ்</button>
+    <button data-set="en" aria-pressed="false">English</button>
+  </div>
+  <div class="logo" aria-hidden="true">S</div>
+
+  <section data-l="si" class="on">
+    <h1>SriBees Hub</h1>
+    <p class="lead">SriBees apps ඔක්කොම එක තැනකින්. Install කරන්න, update කරන්න නොමිලේ.</p>
+    <a class="btn" href="/sribees-hub.apk">Android සඳහා download කරන්න</a>
+    <div class="card">
+      <strong>Install කරන හැටි</strong>
+      <ol>
+        <li>උඩ තියෙන button එක ඔබන්න.</li>
+        <li>Download වුණාම file එක open කරන්න.</li>
+        <li>Phone එක අහනවා නම් "Allow from this source" on කරන්න.</li>
+        <li>Install ඔබන්න. ඉවරයි!</li>
+      </ol>
+    </div>
+    <p class="muted">iPhone නම්: SriBees apps App Store එකෙන් ගන්න.</p>
+  </section>
+
+  <section data-l="ta">
+    <h1>SriBees Hub</h1>
+    <p class="lead">அனைத்து SriBees செயலிகளும் ஒரே இடத்தில். நிறுவுதல், புதுப்பித்தல் இலவசம்.</p>
+    <a class="btn" href="/sribees-hub.apk">Android க்கு பதிவிறக்கவும்</a>
+    <div class="card">
+      <strong>நிறுவுவது எப்படி</strong>
+      <ol>
+        <li>மேலே உள்ள பொத்தானைத் தட்டவும்.</li>
+        <li>பதிவிறக்கம் முடிந்ததும் கோப்பைத் திறக்கவும்.</li>
+        <li>கேட்டால் "Allow from this source" ஐ இயக்கவும்.</li>
+        <li>நிறுவு என்பதைத் தட்டவும்.</li>
+      </ol>
+    </div>
+    <p class="muted">iPhone: SriBees செயலிகளை App Store இல் பெறுங்கள்.</p>
+  </section>
+
+  <section data-l="en">
+    <h1>SriBees Hub</h1>
+    <p class="lead">Every SriBees app in one place. Install and update for free.</p>
+    <a class="btn" href="/sribees-hub.apk">Download for Android</a>
+    <div class="card">
+      <strong>How to install</strong>
+      <ol>
+        <li>Tap the button above.</li>
+        <li>Open the file when the download finishes.</li>
+        <li>If asked, turn on "Allow from this source".</li>
+        <li>Tap Install. Done!</li>
+      </ol>
+    </div>
+    <p class="muted">iPhone: get SriBees apps on the App Store.</p>
+  </section>
+</main>
+<script>
+  document.querySelectorAll('[data-set]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var l = b.getAttribute('data-set');
+      document.querySelectorAll('[data-l]').forEach(function (s) { s.classList.toggle('on', s.getAttribute('data-l') === l); });
+      document.querySelectorAll('[data-set]').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      document.documentElement.lang = l;
+    });
+  });
+</script>
+</body>
+</html>
