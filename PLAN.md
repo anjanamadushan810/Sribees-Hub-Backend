@@ -87,6 +87,74 @@ Decisions confirmed by owner 2026-11-20 (customer app on Play = "for now"):
   creating them.
 - Done-when item 4 becomes: a private app is visible/downloadable only for an invited Google
   account; a public app is visible to everyone.
+- 2026-11-24: the 3 repos exist on GitHub (anjanamadushan810, public by owner choice):
+  Sribees-Hub-Backend, Sribees-Hub-Admin, Sribees-Hub-Mobile. This folder stays the source;
+  it is split per part and pushed (development only).
+
+## Phase 1b — Hub backend + admin (owner interview 2026-11-24, rounds 1-3)
+
+### Owner decisions
+| topic | decision |
+|---|---|
+| Admin login | Google sign-in; only allow-listed Gmail addresses |
+| Admin address | `admin.hub.sribees.com` |
+| Admin roles | **Owner** (everything, adds/removes admins), **Admin** (all app settings + invites), **Publisher** (upload versions only). Every change is written to an audit log. |
+| First owner | the owner's Gmail, set only in the server `.env` (`HUB_OWNER_EMAIL`), never in git |
+| Invitation email | Brevo (free tier, 300/day), sender support@sribeesonline.com; needs DKIM/SPF DNS records on sribeesonline.com. The same sender can later serve the Partner password reset. |
+| New versions | Upload the APK in the admin page first; CI upload comes later |
+| Public apps | No sign-in needed; "Sign in" appears in the Hub only to see private apps |
+| Devices | For signed-in users: email, phone model, Android version, installed version per app. Anonymous devices only as counts. |
+| Access removed | The app disappears from that person's Hub at once, and downloads and updates are refused. An app already installed stays on the phone (Android cannot remove it remotely); turning off that person's login inside the app itself is the real lock. |
+| New Orders | Becomes **private**; the owner gives the staff Gmail list to invite; the old public APK links stop working |
+| Test place | **Straight on hub.sribees.com** (no dev copy). Guardrail: everything is additive, so the static landing page, `/sribees-hub.apk` and today's `catalog.json` keep working until the owner says to switch. |
+| Delivery | In 3 parts, each tested by the owner before the next |
+
+### Architecture
+- **Backend** (`Sribees-Hub-Backend`): FastAPI + own Postgres (own container, own volume, not the
+  Online DB) + Alembic, in `~/sribees-hub` on Contabo next to the nginx container. Served at
+  `hub.sribees.com/api/*` (Caddy path route). Sessions are short-lived tokens;
+  Google ID tokens are verified on the server (audience = our OAuth client ids).
+- **Admin** (`Sribees-Hub-Admin`): React + Vite static build, served by nginx at
+  `admin.hub.sribees.com` (own Caddy block, DNS A record -> the Contabo IP).
+- **Mobile** (`Sribees-Hub-Mobile`): adds Google sign-in, reads the catalog from `/api/catalog`
+  (fallback to the static `catalog.json` until the switch), reports installed versions.
+- **Private APKs**: stored outside the public web root; the API hands out a download link valid for
+  a few minutes, only to an invited, signed-in user (nginx `X-Accel-Redirect` / internal location).
+- **APK upload check**: the server reads package name, versionCode/versionName and the signing
+  certificate from the uploaded APK, and refuses it if the package or signer differs from the app's
+  record or the versionCode does not go up. sha256 is computed by the server, never typed by hand.
+- **Risk tier: HIGH** (auth + who can see what). The auth and access code gets a separate review
+  by a fresh reviewer agent before it goes live.
+- Needs from outside: Google OAuth client ids (web for admin, Android for the Hub app), Brevo
+  account + API key, DNS records (admin.hub A record; Brevo DKIM/SPF).
+
+### Part 1 — backend + admin login + public/private  (done when all pass)
+1. [ ] `https://hub.sribees.com/api/health` answers 200; the landing page, `/sribees-hub.apk` and
+       `/catalog.json` still answer 200 with unchanged sha256.
+2. [ ] `https://admin.hub.sribees.com` opens; the owner's Gmail signs in; any other Gmail gets
+       "not allowed" (tested with a second account).
+3. [ ] The owner adds an Admin and a Publisher; the Publisher cannot open settings or invites
+       (API returns 403, tested).
+4. [ ] Each app shows Public/Private in admin; switching writes an audit-log row.
+5. [ ] Automated tests pass in CI-equivalent local run (auth, roles, 403 paths) and the reviewer
+       agent finds no open high-severity item.
+
+### Part 2 — invites + email + Hub sign-in
+1. [ ] Admin invites a Gmail to New Orders; an email from support@sribeesonline.com arrives
+       (not in spam) with the Hub link.
+2. [ ] In the Hub app (new version), that account signs in with Google and sees New Orders;
+       a not-invited account and a signed-out phone do not see it.
+3. [ ] A direct request for the private APK without a valid link answers 403/404;
+       the issued link stops working after it expires.
+4. [ ] Removing the invite hides the app at the next refresh, and download/update are refused.
+5. [ ] The old public New Orders APK URLs answer 404 after the owner says to switch.
+
+### Part 3 — APK upload + devices
+1. [ ] Publisher uploads a New Orders APK in admin; it appears in the Hub with server-computed
+       sha256; the version shown == APK versionName == pubspec.
+2. [ ] Uploading an APK with a different signer, a different package or a lower versionCode is refused.
+3. [ ] Admin "Devices" lists each signed-in person: email, phone model, Android version, installed
+       version per app; anonymous devices show only as a count.
 
 ## Phase 2 — Business onboarding
 Businesses register in the Hub, choose services, and their staff install those apps.
